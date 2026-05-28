@@ -8,6 +8,23 @@ namespace GymProject.FluentConfigration
     {
         public void Configure(EntityTypeBuilder<Plan> builder)
         {
+            builder.Property(x => x.Name).
+                HasColumnType("varchar")
+                .HasMaxLength(30);
+
+            builder.Property(p => p.Description)
+                   .HasMaxLength(300);
+
+            builder.Property(p => p.Price)
+                   .HasPrecision(10, 2);
+            builder.Property(P => P.CreatedAt)
+                   .HasDefaultValueSql("GETDATE()");
+
+            builder.ToTable(TB =>
+            {
+                TB.HasCheckConstraint("PlanDurationCheck", "DurationDays Between 1 and 365");
+            });
+
 
         }
     }
