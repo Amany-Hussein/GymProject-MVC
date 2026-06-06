@@ -1,4 +1,5 @@
-﻿using GymProject.Models;
+﻿using GymProject.FluentConfigration;
+using GymProject.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace GymProject.Context
@@ -8,9 +9,14 @@ namespace GymProject.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer
-            ("Server = . ; DataBase = GymDb , Trusted_Connection = true ; TrustedServerCertificate = true");
+            ("Server=.;Database=GymDb;Trusted_Connection=True;TrustServerCertificate=True;");
         }
 
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration<Plan>(new PlanConfig());
+        }
         public DbSet<Plan> Plans { get; set; }
 
     }
