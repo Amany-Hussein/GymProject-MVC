@@ -13,7 +13,7 @@ namespace GymManagement.DAL.FluentConfigration
         {
             builder.ToTable(TB =>
             {
-                TB.HasCheckConstraint("SessionCapacityCheck", "Cpacity Between 1 And 25");
+                TB.HasCheckConstraint("SessionCapacityCheck", "Capacity Between 1 And 25");
                 TB.HasCheckConstraint("SessionEndDateCheck", "EndDate > StartDate");
 
             });

@@ -8,5 +8,12 @@ namespace GymManagement.DAL.Models
     {
 
         public string CategoryName { get; set; }
+
+        #region Relationships
+
+        public ICollection<Session> Sessions { get; set; } = default;
+
+        #endregion
     }
+
 }

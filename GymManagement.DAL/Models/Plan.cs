@@ -11,5 +11,11 @@ namespace GymProject.Models
         public bool IsActive { get; set; }
 
 
+        #region Relationships 
+
+        public ICollection<Membership> Members { get; set; }
+
+        #endregion
+
     }
 }

@@ -25,7 +25,7 @@ namespace GymManagement.DAL.FluentConfigration
             builder.ToTable(TB =>
             {
                 TB.HasCheckConstraint("EmailCheck", "Email Like '_%@_%._%'");
-                TB.HasCheckConstraint("PhoneCheck", "Phone Like '010' or Phone Like '011' or Phone Like '012' or Phone Like '015' ");
+                TB.HasCheckConstraint("PhoneCheck", "Phone Like '010%' or Phone Like '011%' or Phone Like '012%' or Phone Like '015%' ");
             });
 
             builder.OwnsOne(G => G.Address , Address =>
