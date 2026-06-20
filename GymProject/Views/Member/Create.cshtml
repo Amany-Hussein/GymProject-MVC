@@ -1,5 +1,10 @@
 ﻿@using GymManagement.DAL.Models.Enums
 @model CreateMemberViewModel
+
+@{
+    ViewData["Title"] = "Create Member";
+}
+
 <div class="container">
     <main role="main" class="pb-3">
 
@@ -36,27 +41,30 @@
                         <div class="col-12 col-md-6">
                             <label asp-for="Name"></label>
                             <input asp-for="Name" class="form-control" />
-                            <span asp-validation-for="Name" ></span>
+                            <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
                         <div class="col-12 col-md-6">
                             <label asp-for="Email"></label>
                             <input asp-for="Email" class="form-control" />
-                            <span asp-validation-for="Email"></span>
+                            <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                         <div class="col-12 col-md-6">
                             <label asp-for="Phone"></label>
                             <input asp-for="Phone" class="form-control" />
-                            <span asp-validation-for="Phone"></span>
+                            <span asp-validation-for="Phone" class="text-danger"></span>
                         </div>
                         <div class="col-12 col-md-6">
                             <label asp-for="DateOfBirth"></label>
                             <input asp-for="DateOfBirth" class="form-control" type="date" />
+                            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+
                         </div>
                         <div class="col-12 col-md-6">
                             <label asp-for="Gender"></label>
                             <select asp-for="Gender" class="form-select" asp-items="Html.GetEnumSelectList<Gender>()">
                                 <option value="">-- Select Gender --</option>
                             </select>
+                            <span asp-validation-for="Gender" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="section-header mb-3 mt-4">
@@ -68,15 +76,18 @@
                         <div class="col-12 col-md-6">
                             <label asp-for="BuildingNumber"></label>
                             <input asp-for="BuildingNumber" class="form-control" />
+                            <span asp-validation-for="BuildingNumber" class="text-danger"></span>
                         </div>
 
                         <div class="col-12 col-md-6">
                             <label asp-for="Street"></label>
                             <input asp-for="Street" class="form-control" />
+                            <span asp-validation-for="Street" class="text-danger"></span>
                         </div>
                         <div class="col-12 col-md-6">
                             <label asp-for="City"></label>
                             <input asp-for="City" class="form-control" />
+                            <span asp-validation-for="City" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
@@ -87,12 +98,13 @@
                         <div class="col-12 col-md-6">
                             <label asp-for="HealthRecordViewModel.Height"></label>
                             <input asp-for="HealthRecordViewModel.Height" class="form-control" />
+                            <span asp-validation-for="HealthRecordViewModel.Height" class="text-danger"></span>
                         </div>
 
                         <div class="col-12 col-md-6">
                             <label asp-for="HealthRecordViewModel.Weight"></label>
                             <input asp-for ="HealthRecordViewModel.Weight" class="form-control" />
-                            <span asp-validation-for="HealthRecordViewModel.Weight"></span>
+                            <span asp-validation-for="HealthRecordViewModel.Weight" class="text-danger"></span>
                         </div>
 
                         <div class="col-12 col-md-6">
@@ -112,6 +124,7 @@
                         <div class="col-12 col-md-6">
                             <label asp-for="HealthRecordViewModel.Note"></label>
                             <input asp-for="HealthRecordViewModel.Note" class="form-control" />
+                            <span asp-validation-for="HealthRecordViewModel.Note" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
@@ -127,7 +140,7 @@
                 </button>
             </footer>
 
-        </form>
+        </form>       
 
     </main>
 </div>
@@ -147,4 +160,5 @@
     reader.readAsDataURL(file);
     }
     });
+</script>
 </script>
