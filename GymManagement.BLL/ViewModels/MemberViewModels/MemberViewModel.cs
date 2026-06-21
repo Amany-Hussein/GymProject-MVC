@@ -13,5 +13,13 @@ namespace GymManagement.BLL.ViewModels.MemberViewModels
         public string Phone { get; set; }
         public string Gender { get; set; }
 
+        // Member Details
+        public string? DateOfBirth { get; set; }
+        public string? Address { get; set; }
+        public string? PlanName { get; set; }
+        public string? MembershipStartDate { get; set; }
+        public string? MembershipEndDate { get; set; }
+
+
     }
 }

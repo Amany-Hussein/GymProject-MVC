@@ -7,17 +7,6 @@ namespace GymProject.PL.Controllers
     public class MemberController : Controller
     {
 
-        #region Get Member
-
-        // Get :: BaseUrl/Members/Index => List All Members
-
-        // Get :: BaseUrl/Members/Details{Id} => get specific Member
-
-        // Get :: BaseUrl/Members/HealthRecordDetails{Id} => Get data of specific Member with Healt
-
-        #endregion
-
-      
 
         private readonly IMemberService memberService;
 
@@ -26,12 +15,42 @@ namespace GymProject.PL.Controllers
             this.memberService = memberService;
         }
 
+        // Get :: BaseUrl/Members/Index => List All Members
         public async Task<IActionResult> Index(CancellationToken ct)
         {
             var Member = await memberService.GetAllAsync(ct : ct);
             return View(Member);
         }
 
+
+        // Get :: BaseUrl/Members/Details{Id} => get specific Member
+        public async Task<IActionResult> MemberDetails(int id , CancellationToken ct)
+        {
+            var member = await memberService.GetMemberDetailsByIdAsync(id , ct);
+
+            if(member is null)
+            {
+                TempData["ErrorMessage"] = "Member Not Found !";
+            }
+            return View(member);
+            
+        }
+
+
+        // Get :: BaseUrl/Members/HealthRecordDetails{Id} => Get data of specific Member with Healt
+        public async Task<IActionResult> HealthRecordDetails(int id, CancellationToken ct) 
+        {
+            var record = await memberService.GetMemberHealthRecord(id, ct);
+
+            if (record is null)
+            {
+                TempData["ErrorMessage"] = "No Health Record found !";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+
+                return View(record);
+        }
 
         #region Create
 
@@ -77,3 +96,5 @@ namespace GymProject.PL.Controllers
         #endregion
     }
 }
+
+

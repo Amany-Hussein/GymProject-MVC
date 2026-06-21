@@ -2,6 +2,7 @@
 using GymManagement.BLL.ViewModels.MemberViewModels;
 using GymManagement.DAL.Models;
 using GymManagement.DAL.Repositories.Interfaces;
+using GymProject.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,10 +13,17 @@ namespace GymManagement.BLL.Services.Classes
     {
         //DataBase Connection 
         private readonly IGenericRepository<Member> MemberRepo;
+        private readonly IGenericRepository<Membership> MembershipRepo;
+        private readonly IGenericRepository<Plan> PlanRepo;
+        private readonly IGenericRepository<HealthRecord> HealthRecordRepo;
 
-        public MemberService(IGenericRepository<Member> MemberRepo)
+
+        public MemberService(IGenericRepository<Member> MemberRepo, IGenericRepository<Membership> membershipRepo , IGenericRepository<Plan> planRepo , IGenericRepository<HealthRecord> healthRecordRepo)
         {
             this.MemberRepo = MemberRepo;
+            MembershipRepo = membershipRepo;
+            PlanRepo = planRepo;
+            HealthRecordRepo = healthRecordRepo;
         }
 
 
@@ -86,5 +94,59 @@ namespace GymManagement.BLL.Services.Classes
             }
             return result;
         }
+
+        public async Task<MemberViewModel?> GetMemberDetailsByIdAsync(int MemberId, CancellationToken ct = default)
+        {
+            //Get Member By Id
+            var member = await MemberRepo.GetByIdAsync(MemberId , ct);
+
+            if(member == null) return null;
+
+            var model = new MemberViewModel()
+            {
+                Name = member.Name,
+                Email = member.Email,
+                Phone = member.Phone,
+                Gender = member.Gender.ToString(),
+                Photo = member.Photo,
+                DateOfBirth = member.DateOfBirth.ToString(),
+                Address = $"{member.Address.BuildingNumber} - {member.Address.Street} - {member.Address.City}",
+
+            };
+
+            // Check If Member has Acive Membership or not
+            var ActiveMembership = await MembershipRepo.FirstOrDefaultAsync(x => x.MemberId == MemberId && x.EndDate > DateTime.Now);
+
+            if(ActiveMembership is not null)
+            {
+                var ActivePlan = await PlanRepo.GetByIdAsync(ActiveMembership.PlanId, ct);
+
+                model.PlanName = ActivePlan.Name;
+                model.MembershipStartDate = ActiveMembership.CreatedAt.ToString();
+                model.MembershipEndDate = ActiveMembership.EndDate.ToString();
+            }
+
+            return model;
+        }
+
+        public async Task<HealthRecordViewModel?> GetMemberHealthRecord(int MemberId, CancellationToken ct = default)
+        {
+            var record = await HealthRecordRepo.FirstOrDefaultAsync(x => x.MemberId == MemberId, ct: ct);
+
+            if(record is null) return null;
+
+            else
+            {
+                return new HealthRecordViewModel()
+                {
+                    Height = record.Height,
+                    Weight = record.Weight,
+                    BloodType = record.BloodType,
+                    Note = record.Note,
+                };
+            }
+        }
     }
+    
+    
 }
