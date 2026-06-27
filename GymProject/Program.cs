@@ -33,6 +33,7 @@ namespace GymProject
                 app.UseHsts();
             }
 
+            //Middlewares
             app.UseHttpsRedirection();
             app.UseRouting();
 

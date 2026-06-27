@@ -15,6 +15,7 @@ namespace GymProject.PL.Controllers
             this.memberService = memberService;
         }
 
+        #region Get
         // Get :: BaseUrl/Members/Index => List All Members
         public async Task<IActionResult> Index(CancellationToken ct)
         {
@@ -52,6 +53,8 @@ namespace GymProject.PL.Controllers
                 return View(record);
         }
 
+        #endregion
+        
         #region Create
 
         // Get :: BaseUrl/Members/Create => Show Empty Form
@@ -83,9 +86,42 @@ namespace GymProject.PL.Controllers
         #region Edit
 
         // Get :: BaseUrl/Members/Edit => Show Edit Form
+        [HttpGet]
+        public async Task<IActionResult> EditMember(int id , CancellationToken ct)
+        {
+            var member = await memberService.GetMemberToUpdateAsync(id, ct);
+
+            if(member is null)
+            {
+                TempData["ErrorMessage"] = "Member Not found !";
+                return RedirectToAction(nameof(Index));
+            }
+            return View(member);
+        }
+
+
+
 
         // Post :: BaseUrl/Members/Edit{Member} => Submit Edit form
+        [HttpPost]
+        public async Task<IActionResult> EditMember(int id , MemberToUpdateViewModel model, CancellationToken ct)
+        {
+            //Check ModelState
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
 
+            var result = await memberService.UpdateMemberAsync(id , model, ct);
+
+            if (result)
+                TempData["SuccessMessage"] = "Member Updated Succefully";
+            else
+                TempData["ErrorMessage"] = "Failed to Update Member 1";
+
+            return RedirectToAction(nameof(Index));
+        }
+    }
 
         #endregion
 
@@ -95,6 +131,7 @@ namespace GymProject.PL.Controllers
 
         #endregion
     }
-}
+
+
 
 
