@@ -9,7 +9,6 @@ namespace GymManagement.BLL.Services.Interfaces
     public interface IMemberService
     {
         // Get All
-
         Task<IEnumerable<MemberViewModel>> GetAllAsync(CancellationToken ct = default);
 
         // Create Member
@@ -26,5 +25,9 @@ namespace GymManagement.BLL.Services.Interfaces
 
         //Update Member
         Task<bool> UpdateMemberAsync( int id ,MemberToUpdateViewModel Model, CancellationToken ct = default);
+
+        // Delete Member
+        Task<bool> DeleteMemberAsync(int id, CancellationToken ct = default);
+
     }
 }

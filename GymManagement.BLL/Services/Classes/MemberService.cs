@@ -16,14 +16,21 @@ namespace GymManagement.BLL.Services.Classes
         private readonly IGenericRepository<Membership> MembershipRepo;
         private readonly IGenericRepository<Plan> PlanRepo;
         private readonly IGenericRepository<HealthRecord> HealthRecordRepo;
+        private readonly IGenericRepository<Booking> BookingRepo;
 
 
-        public MemberService(IGenericRepository<Member> MemberRepo, IGenericRepository<Membership> membershipRepo , IGenericRepository<Plan> planRepo , IGenericRepository<HealthRecord> healthRecordRepo)
+
+        public MemberService(IGenericRepository<Member> MemberRepo
+            , IGenericRepository<Membership> membershipRepo 
+            , IGenericRepository<Plan> planRepo ,
+            IGenericRepository<HealthRecord> healthRecordRepo ,
+            IGenericRepository<Booking> BookingRepo)
         {
             this.MemberRepo = MemberRepo;
             MembershipRepo = membershipRepo;
             PlanRepo = planRepo;
             HealthRecordRepo = healthRecordRepo;
+            this.BookingRepo = BookingRepo;
         }
 
 
@@ -66,6 +73,26 @@ namespace GymManagement.BLL.Services.Classes
 
             return result > 0;
         }
+
+        public async Task<bool> DeleteMemberAsync(int id, CancellationToken ct = default)
+        {
+            var member = await MemberRepo.GetByIdAsync(id , ct);
+
+            if(member == null) return false;
+
+            // Check if member has active Booking or not
+            var HasActiveBooking = await BookingRepo.AnyAsync(x => x.MemberId == member.Id && x.Session.StartDate > DateTime.Now);
+
+            if(HasActiveBooking) return false;
+
+            var result = await MemberRepo.DeleteAsync(member);
+
+            return result > 0;
+        }
+        
+
+            
+        
 
         public async Task<IEnumerable<MemberViewModel>> GetAllAsync(CancellationToken ct = default)
         {
