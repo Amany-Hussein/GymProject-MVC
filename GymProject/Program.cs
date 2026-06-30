@@ -18,6 +18,7 @@ namespace GymProject
 
             builder.Services.AddScoped<IMemberService, MemberService>();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddDbContext<GymDbContext>(options =>
                 options.UseSqlServer(
