@@ -1,4 +1,5 @@
-﻿using GymManagement.DAL.Repositories.Classes;
+﻿using GymManagement.BLL.Services.Interfaces;
+using GymManagement.DAL.Repositories.Classes;
 using GymManagement.DAL.Repositories.Interfaces;
 using GymProject.Context;
 using GymProject.Models;
@@ -10,18 +11,18 @@ namespace GymProject.Controllers
     public class PlanController : Controller
     {
 
-        private readonly IGenericRepository<Plan> _planRepository;
+        private readonly IPlanService planService;
 
-        public PlanController(IGenericRepository<Plan> planRepository)
+        public PlanController(IPlanService planService)
         {
-            _planRepository = planRepository;
+            this.planService = planService;
         }
 
         //Get :: BaseUrl/Plan/Index
 
         public async Task<IActionResult> Index(CancellationToken ct)
         {
-            var Plans = await _planRepository.GetAllAsync(ct : ct); //pass by name
+            var Plans = await planService.GetAllAsync(ct : ct); //pass by name
 
             return View(Plans);
         }
@@ -29,7 +30,7 @@ namespace GymProject.Controllers
         // Get :: BaseUrl/Plan/Details/{id}
         public async Task<IActionResult> Details(int id , CancellationToken ct)
         {
-            var Plan = await _planRepository.GetByIdAsync(id , ct);
+            var Plan = await planService.GetPlanDetailsByIdAsync(id, ct);
 
             if (Plan == null)
                 return RedirectToAction(nameof(Index));

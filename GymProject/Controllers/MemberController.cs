@@ -16,7 +16,7 @@ namespace GymProject.PL.Controllers
         }
 
         #region Get
-        // Get :: BaseUrl/Members/Index => List All Members
+        // Get :: BaseUrl/Member/Index => List All Members
         public async Task<IActionResult> Index(CancellationToken ct)
         {
             var Member = await memberService.GetAllAsync(ct: ct);

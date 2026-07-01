@@ -1,4 +1,5 @@
-﻿using GymManagement.BLL.Services.Interfaces;
+﻿using AutoMapper;
+using GymManagement.BLL.Services.Interfaces;
 using GymManagement.BLL.ViewModels.MemberViewModels;
 using GymManagement.DAL.Models;
 using GymManagement.DAL.Repositories.Interfaces;
@@ -12,11 +13,13 @@ namespace GymManagement.BLL.Services.Classes
     public class MemberService : IMemberService
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly IMapper mapper;
 
         // object of UintOfWork
-        public MemberService(IUnitOfWork unitOfWork)
+        public MemberService(IUnitOfWork unitOfWork , IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
+            this.mapper = mapper;
         }
 
         public async Task<bool> CreateMemberAsync(CreateMemberViewModel model, CancellationToken ct = default)
@@ -31,28 +34,33 @@ namespace GymManagement.BLL.Services.Classes
             if (EmailExist || PhoneExist)
                 return false;
 
-            var member = new Member()
-            {
-                Name = model.Name,
-                Phone = model.Phone,
-                Email = model.Email,
-                Gender = model.Gender,
-                DateOfBirth = model.DateOfBirth,
-                Address = new Address()
-                {
-                    City = model.City,
-                    BuildingNumber = model.BuildingNumber,
-                    Street = model.Street,
-                },
-                HealthRecord = new HealthRecord()
-                {
-                    Height = model.HealthRecordViewModel.Height,
-                    Weight = model.HealthRecordViewModel.Weight,
-                    BloodType = model.HealthRecordViewModel.BloodType,
-                    Note = model.HealthRecordViewModel.Note,
-                },
 
-            };
+            // Map from CreateMemberViewModel => Member
+            var member = mapper.Map<Member>(model);
+
+
+            //new Member()
+            //{
+            //    Name = model.Name,
+            //    Phone = model.Phone,
+            //    Email = model.Email,
+            //    Gender = model.Gender,
+            //    DateOfBirth = model.DateOfBirth,
+            //    Address = new Address()
+            //    {
+            //        City = model.City,
+            //        BuildingNumber = model.BuildingNumber,
+            //        Street = model.Street,
+            //    },
+            //    HealthRecord = new HealthRecord()
+            //    {
+            //        Height = model.HealthRecordViewModel.Height,
+            //        Weight = model.HealthRecordViewModel.Weight,
+            //        BloodType = model.HealthRecordViewModel.BloodType,
+            //        Note = model.HealthRecordViewModel.Note,
+            //    },
+
+            //};
             unitOfWork.GetRepository<Member>().AddAsync(member);
 
             var result = await unitOfWork.SaveChangesAsync(ct);
@@ -92,15 +100,18 @@ namespace GymManagement.BLL.Services.Classes
             {
                 // data comes from database I need to send it to the view
                 //Manual Mapping
-                var memberViewModel = new MemberViewModel()
-                {
-                    Name = Member.Name,
-                    Phone = Member.Phone,
-                    Photo = Member.Photo,
-                    Email = Member.Email,
-                    Id = Member.Id,
-                    Gender = Member.Gender.ToString(),
-                };
+                var memberViewModel = mapper.Map<MemberViewModel>(Member);
+
+
+                //    new MemberViewModel()
+                //{
+                //    Name = Member.Name,
+                //    Phone = Member.Phone,
+                //    Photo = Member.Photo,
+                //    Email = Member.Email,
+                //    Id = Member.Id,
+                //    Gender = Member.Gender.ToString(),
+                //};
                 result.Add(memberViewModel);
             }
             return result;
@@ -113,17 +124,27 @@ namespace GymManagement.BLL.Services.Classes
 
             if(member == null) return null;
 
-            var model = new MemberViewModel()
-            {
-                Name = member.Name,
-                Email = member.Email,
-                Phone = member.Phone,
-                Gender = member.Gender.ToString(),
-                Photo = member.Photo,
-                DateOfBirth = member.DateOfBirth.ToString(),
-                Address = $"{member.Address.BuildingNumber} - {member.Address.Street} - {member.Address.City}",
 
-            };
+            //var model = new MemberViewModel()
+            //{
+
+            //    Name = member.Name,
+            //    Phone = member.Phone,
+            //    Email = member.Email,
+            //    Photo = member.Photo,
+            //    Gender = member.Gender.ToString(),
+            //    DateOfBirth = member.DateOfBirth.ToShortDateString(),
+            //    Address = $"{member.Address.BuildingNumber} _ {member.Address.Street} _ {member.Address.City}",
+            //    // plan name ?????????
+            //    // membership start & end date  ?????????
+
+            //}; [old]
+
+            //[new]
+            //var model = _mapper.Map<Member, MemberViewModel>(member); or
+            // Map from Member => MemberViewModel
+            var model = mapper.Map<MemberViewModel>(member);
+
 
             // Check If Member has Acive Membership or not
             var ActiveMembership = await unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.MemberId == MemberId && x.EndDate > DateTime.Now);
@@ -148,13 +169,17 @@ namespace GymManagement.BLL.Services.Classes
 
             else
             {
-                return new HealthRecordViewModel()
-                {
-                    Height = record.Height,
-                    Weight = record.Weight,
-                    BloodType = record.BloodType,
-                    Note = record.Note,
-                };
+                // Map from HealthRecord => HealthRecordViewModel
+
+                return mapper.Map<HealthRecordViewModel>(record);
+
+                //return new HealthRecordViewModel()
+                //{
+                //    Height = record.Height,
+                //    Weight = record.Weight,
+                //    BloodType = record.BloodType,
+                //    Note = record.Note,
+                //};
             }
         }
 
@@ -166,16 +191,20 @@ namespace GymManagement.BLL.Services.Classes
                 return null;
             else
             {
-                return new MemberToUpdateViewModel()
-                {
-                    Name = Member.Name,
-                    Phone = Member.Phone,
-                    Photo = Member.Photo,
-                    Email = Member.Email,
-                    BuildingNumber = Member.Address.BuildingNumber,
-                    City = Member.Address.City,
-                    Street = Member.Address.Street,
-                };
+                // Map from Member => MemberToUpdateViewModel
+                return mapper.Map<MemberToUpdateViewModel>(Member);
+
+                // OLD way
+                //return new MemberToUpdateViewModel()
+                //{
+                //    Name = Member.Name,
+                //    Phone = Member.Phone,
+                //    Photo = Member.Photo,
+                //    Email = Member.Email,
+                //    BuildingNumber = Member.Address.BuildingNumber,
+                //    City = Member.Address.City,
+                //    Street = Member.Address.Street,
+                //};
             }
         }
 
@@ -193,11 +222,14 @@ namespace GymManagement.BLL.Services.Classes
                 return false;
             }
 
-            member.Phone = model.Phone;
-            member.Email = model.Email;
-            member.Address.City = model.City;
-            member.Address.Street = model.Street;
-            member.Address.BuildingNumber = model.BuildingNumber;
+            // Map from MemberToUpdateViewModel => Member
+            mapper.Map<Member>(member);
+
+            //member.Phone = model.Phone;
+            //member.Email = model.Email;
+            //member.Address.City = model.City;
+            //member.Address.Street = model.Street;
+            //member.Address.BuildingNumber = model.BuildingNumber;
             member.UpdatedAt = DateTime.Now;
 
             unitOfWork.GetRepository<Member>().UpdateAsync(member);
