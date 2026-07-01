@@ -41,13 +41,13 @@ namespace GymProject.PL.Controllers
             }
             var result = await sessionService.CreateSessionAsync(model, ct);
 
-            if (result)
+            if (result.success)
             {
                 TempData["SuccessMessage"] = "Session CreateD Successfully";
                 return RedirectToAction(nameof(Index));
             }
 
-            TempData["ErrorMessage"] = "Failed to create Session !";
+            TempData["ErrorMessage"] = result.error;
 
             await DropDownList();
             return View(model);

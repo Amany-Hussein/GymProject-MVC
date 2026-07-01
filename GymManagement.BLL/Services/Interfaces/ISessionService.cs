@@ -1,4 +1,5 @@
-﻿using GymManagement.BLL.ViewModels.MemberViewModels;
+﻿using GymManagement.BLL.Common;
+using GymManagement.BLL.ViewModels.MemberViewModels;
 using GymManagement.BLL.ViewModels.SessionViewModels;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace GymManagement.BLL.Services.Interfaces
 
 
         // Create Session
-        Task<bool> CreateSessionAsync(CreateSessionViewModel model, CancellationToken ct = default);
+        Task<Result> CreateSessionAsync(CreateSessionViewModel model, CancellationToken ct = default);
 
         // get trainers for viewbag  
         Task<IEnumerable<TrainerSelectViewModel>> GetTrainerForDropDown(CancellationToken ct = default);
