@@ -4,13 +4,14 @@ using GymManagement.BLL.Services.Interfaces;
 using GymManagement.DAL.Repositories.Classes;
 using GymManagement.DAL.Repositories.Interfaces;
 using GymProject.Context;
+using GymProject.PL;
 using Microsoft.EntityFrameworkCore;
 
 namespace GymProject
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +32,17 @@ namespace GymProject
 
             
 
-                var app = builder.Build();
+            var app = builder.Build();
+
+
+            #region seeding
+
+            // Seeding
+            await app.MigrateAndSeedDataAsync();
+            
+
+            #endregion
+
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
