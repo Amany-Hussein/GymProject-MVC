@@ -21,6 +21,15 @@ namespace GymManagement.BLL.Services.Interfaces
 
         // get Categories for viewbag  
         Task<IEnumerable<CategorySelectViewModel>> GetCategoryrForDropDown(CancellationToken ct = default);
+
+        // Get Session Details
+        Task<Result<SessionViewModel>> GetSessionByIdAsync(int sessionId, CancellationToken ct = default);
+
+        // Get Session to Update
+        Task<Result<UpdateSessionViewModel>> GetSessionToUpdateAsync(int sessionId, CancellationToken ct = default);
+
+        //Update Session
+        Task<Result> UpdateSessionAsync(int sessionId, UpdateSessionViewModel model ,  CancellationToken ct = default);
     }
 }
 
