@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
+using static System.Collections.Specialized.BitVector32;
 
 namespace GymManagement.BLL.Services.Classes
 {
@@ -189,7 +190,24 @@ namespace GymManagement.BLL.Services.Classes
 
         }
 
+        public async Task<Result> DeleteSession(int sessionId, CancellationToken ct = default)
+        {
+            var session = await unitOfWork.SessionRepository.GetByIdAsync(sessionId);
 
+            if (session is null)
+                return Result.NotFound("Session not found.");
+
+            // Rule 1: Cannot delete an ongoing session
+            if(session.StartDate <= DateTime.Now && session.EndDate >= DateTime.Now)
+                return Result.Validation("Cannot delete an ongoing session.");
+
+            //Delete Session
+            unitOfWork.SessionRepository.DeleteAsync(session);
+
+            var result = await unitOfWork.SaveChangesAsync(ct);
+
+            return result > 0 ? Result.OK() : Result.Fail("Failed to delete session.");
+        }
     }
     
 }

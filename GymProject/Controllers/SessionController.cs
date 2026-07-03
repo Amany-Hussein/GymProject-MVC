@@ -139,6 +139,42 @@ namespace GymProject.PL.Controllers
         }
         #endregion
 
+        #region delete
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id, CancellationToken ct)
+        {
+            var result = await sessionService.GetSessionByIdAsync(id, ct);
+
+            if (!result.success)
+            {
+                TempData["ErrorMessage"] = result.error;
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(result.Value);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id, CancellationToken ct)
+        {
+            var result = await sessionService.DeleteSession(id, ct);
+
+            if (result.success)
+            {
+                TempData["SuccessMessage"] = "Session deleted successfully.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = result.error;
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        #endregion
+
 
     }
 }
