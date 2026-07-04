@@ -35,9 +35,9 @@ namespace GymManagement.DAL.Repositories.Classes
         {
             if (expression is null)
             {
-                return await dbContext.Set<TEntity>().AsNoTracking().CountAsync(ct);
+                return await set.AsNoTracking().CountAsync(ct);
             }
-            return await dbContext.Set<TEntity>().AsNoTracking().CountAsync(expression, ct);
+            return await set.AsNoTracking().CountAsync(expression, ct);
         }
 
 
