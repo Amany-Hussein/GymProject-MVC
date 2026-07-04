@@ -2,6 +2,7 @@
 using GymManagement.BLL.ViewModels.MemberViewModels;
 using GymManagement.BLL.ViewModels.PlanViewModels;
 using GymManagement.BLL.ViewModels.SessionViewModels;
+using GymManagement.BLL.ViewModels.TrainerViewModels;
 using GymManagement.DAL.Models;
 using GymProject.Models;
 using System;
@@ -79,7 +80,35 @@ namespace GymManagement.BLL.Profiles
 
         private void TrainerProfiels()
         {
+            CreateMap<Trainer, TrainerViewModel>()
+                                                .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender.ToString()))
+                                                .ForMember(dest => dest.Specialties, opt => opt.MapFrom(src => src.Specialty.ToString()))
+                                                // for details
+                                                .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth))
+                                                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => $"{src.Address.BuildingNumber} _ {src.Address.Street} _ {src.Address.City}"));
+
+            CreateMap<CreateTrainerViewModel, Trainer>()
+                                                .ForMember(dest => dest.Specialty,
+                                                                  opt => opt.MapFrom(src => src.Specialties))
+                                                .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth))
+                                                .ForPath(dest => dest.Address.City, opt => opt.MapFrom(src => src.City))
+                                                .ForPath(dest => dest.Address.BuildingNumber, opt => opt.MapFrom(src => src.BuildingNumber))
+                                                .ForPath(dest => dest.Address.Street, opt => opt.MapFrom(src => src.Street));
+
+
+            CreateMap<Trainer, UpdateTrainerViewModel>()
+                                                    .ForMember(dest => dest.Specialty, opt => opt.MapFrom(src => src.Specialty.ToString()))
+                                                    .ForMember(dest => dest.BuildingNumber, opt => opt.MapFrom(src => src.Address.BuildingNumber))
+                                                    .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Address.Street))
+                                                    .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Address.City));
+
+
+
+            CreateMap<UpdateTrainerViewModel, Trainer>().ForPath(dest => dest.Address.City, opt => opt.MapFrom(src => src.City))
+                                                .ForPath(dest => dest.Address.BuildingNumber, opt => opt.MapFrom(src => src.BuildingNumber))
+                                                .ForPath(dest => dest.Address.Street, opt => opt.MapFrom(src => src.Street)); ;
 
         }
+
     }
 }
