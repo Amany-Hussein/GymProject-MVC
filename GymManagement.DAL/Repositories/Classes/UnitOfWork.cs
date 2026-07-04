@@ -15,17 +15,20 @@ namespace GymManagement.DAL.Repositories.Classes
 
         //DataBase Connection
 
-        public UnitOfWork(GymDbContext dbContext, ISessionRepository sessionRepository , IMemberShipRepository memberShipRepo)
+        public UnitOfWork(GymDbContext dbContext, ISessionRepository sessionRepository , IMemberShipRepository memberShipRepo , IBookingRepository bookingRepository)
         {
             this.dbContext = dbContext;
             SessionRepository = sessionRepository;
             MembershipRepository = memberShipRepo;
+            BookingRepository = bookingRepository;
 
         }
 
         public ISessionRepository SessionRepository { get; }
 
         public IMemberShipRepository MembershipRepository {  get; }
+
+        public IBookingRepository BookingRepository {  get; }
 
         public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity, new()
         {

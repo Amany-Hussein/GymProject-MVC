@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GymManagement.BLL.ViewModels.BookingViewModels;
 using GymManagement.BLL.ViewModels.MembershipViewModels;
 using GymManagement.BLL.ViewModels.MemberViewModels;
 using GymManagement.BLL.ViewModels.PlanViewModels;
@@ -21,7 +22,7 @@ namespace GymManagement.BLL.Profiles
             PlanProfiels();
             TrainerProfiels();
             MembershipProfiels();
-
+            BookingProfiels();
 
         }
 
@@ -126,6 +127,16 @@ namespace GymManagement.BLL.Profiles
             ;
         }
 
+        private void BookingProfiels()
+        {
+            
+                CreateMap<Booking, MemberForSessionViewModel>()
+                                                            .ForMember(dest => dest.MemberName, opt => opt.MapFrom(src => src.Member.Name))
+                                                            .ForMember(dest => dest.IsAttened, opt => opt.MapFrom(src => src.IsAttented))
+                                                            .ForMember(dest => dest.BookingDate, opt => opt.MapFrom(src => src.CreatedAt));
+                CreateMap<CreateBookingViewModel, Booking>();
+            
+        }
 
     }
 }

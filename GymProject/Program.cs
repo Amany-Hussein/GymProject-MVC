@@ -29,7 +29,8 @@ namespace GymProject
             builder.Services.AddScoped<ITrainerService, TrainerService>();
             builder.Services.AddScoped<IMembershipService, MembershipService>();
             builder.Services.AddScoped<IMemberShipRepository, MembershipRepository>();
-
+            builder.Services.AddScoped<IBookingService, BookingService>();
+            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 
 
 

@@ -1,5 +1,6 @@
 ﻿@model MemberViewModel
 
+
 <div class="container">
     <main role="main" class="pb-3">
         <div class="container mt-5">
@@ -7,12 +8,14 @@
                 <div class="col-md-6">
                     <div class="card card-details border-0 p-2 shadow">
                         <div class="text-center mt-3">
+                            @*if no photo represent default*@
                             @if (string.IsNullOrWhiteSpace(Model.Photo))
                             {
-                                <img src="~/images/User.jpg" alt="Default Avatar" class="rounded-circle"
+                                <img src="~/images/User.png.jpg" alt="Default Avatar" class="rounded-circle"
                                      style="width: 40px; height: 40px;" />
                             }
                             else
+                            @*else represent the members photos call the endpoint u created in the member controller that getfile by @url.action(nameofaction,controller ,parameters) *@
                             {
                                 <img src="@Url.Action("Picture", "Member", new { id = Model.Id })" alt="Default Avatar" class="rounded-circle"
                                      style="width: 40px; height: 40px;" />
@@ -80,4 +83,3 @@
 
     </main>
 </div>
-
