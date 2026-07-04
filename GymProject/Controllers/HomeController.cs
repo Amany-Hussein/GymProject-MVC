@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace GymProject.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> logger;

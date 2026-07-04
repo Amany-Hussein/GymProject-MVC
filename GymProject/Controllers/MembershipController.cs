@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GymProject.PL.Controllers
 {
-    ////[Authorize]
-    //[Authorize(Roles = "Admin,SuperAdmin")]
+    //[Authorize]
+    [Authorize(Roles = "Admin,SuperAdmin")]
     public class MembershipController : Controller
     {
 

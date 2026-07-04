@@ -2,12 +2,14 @@
 using GymManagement.DAL.Models;
 using GymProject.FluentConfigration;
 using GymProject.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace GymProject.Context
 {
-    public class GymDbContext : DbContext
+    public class GymDbContext : IdentityDbContext<ApplicationUser>
     {
         public GymDbContext(DbContextOptions<GymDbContext> options) :base(options) 
         {
@@ -17,6 +19,7 @@ namespace GymProject.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
         public DbSet<Plan> Plans { get; set; }
@@ -29,7 +32,7 @@ namespace GymProject.Context
         public DbSet<Category> Categories { get; set; }
         public DbSet<Membership> Memberships { get; set; }
         public DbSet<Booking> Bookings { get; set; }
-
+       
 
     }
 }

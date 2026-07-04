@@ -5,12 +5,14 @@ using GymManagement.DAL.Repositories.Classes;
 using GymManagement.DAL.Repositories.Interfaces;
 using GymProject.Context;
 using GymProject.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Numerics;
 
 namespace GymProject.Controllers
 {
+    [Authorize(Roles = "Admin,SuperAdmin")]
     public class PlanController : Controller
     {
 
