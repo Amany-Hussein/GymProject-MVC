@@ -55,11 +55,11 @@
                                                     </a>
 
                                                     <div class="d-flex gap-2">
-                                                        <a href="\Plans\Edit\@Plan.Id" class="btn btn-outline btn-sm flex-fill"> <!-- Edit -->
+                                                        <a href="\Plan\Edit\@Plan.Id" class="btn btn-outline btn-sm flex-fill"> <!-- Edit -->
                                                             <i class="bi bi-pencil me-1"></i>Edit
                                                         </a>
-                                                        <form href="\Plans\Activate\@Plan.Id" method="post" class="flex-fill">
-                                                            <!-- Edit -->
+                                                    <form action="/Plan/Activate/@Plan.Id" method="post">
+                                                        <!-- Edit -->
                                                             @* If Plan is Active put class text-danger if not text-success *@
                                                             <button type="submit" class="btn btn-outline btn-sm w-100 @(Plan.IsActive ? "text-danger" : "text-success")">
                                                                 
