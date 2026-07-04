@@ -14,12 +14,14 @@ namespace GymManagement.BLL.Services.Classes
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
+        private readonly IAttachmentService attachmentService;
 
         // object of UintOfWork
-        public MemberService(IUnitOfWork unitOfWork , IMapper mapper)
+        public MemberService(IUnitOfWork unitOfWork , IMapper mapper , IAttachmentService attachmentService)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
+            this.attachmentService = attachmentService;
         }
 
         public async Task<bool> CreateMemberAsync(CreateMemberViewModel model, CancellationToken ct = default)
@@ -34,9 +36,16 @@ namespace GymManagement.BLL.Services.Classes
             if (EmailExist || PhoneExist)
                 return false;
 
+            //upload photo
+            var StoredPhotoName = await attachmentService.UploadAsync(model.PhotoFile.OpenReadStream(), model.PhotoFile.FileName, "MembersPhoto");
+            if (string.IsNullOrWhiteSpace(StoredPhotoName)) return false;
+
 
             // Map from CreateMemberViewModel => Member
             var member = mapper.Map<Member>(model);
+
+            // map the photo manually
+            member.Photo = StoredPhotoName;
 
 
             //new Member()
@@ -65,7 +74,16 @@ namespace GymManagement.BLL.Services.Classes
 
             var result = await unitOfWork.SaveChangesAsync(ct);
 
-            return result > 0;
+            if (result > 0)
+            {
+                return true;
+            }// if did not make the else , ohterwise member added or not the photo will be uploaded so delete it
+            else
+            {
+                // delete photo if failed
+                attachmentService.Delete(StoredPhotoName, "MembersPhoto");
+                return false;
+            }
         }
 
         public async Task<bool> DeleteMemberAsync(int id, CancellationToken ct = default)

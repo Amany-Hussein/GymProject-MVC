@@ -25,6 +25,8 @@ namespace GymProject
             builder.Services.AddScoped<ISessionRepository, SessionRepository>();
             builder.Services.AddScoped<ISessionService, SessionService>();
             builder.Services.AddAutoMapper(x => x.AddProfile(new MappingProfile()));
+            builder.Services.AddScoped<IAttachmentService, AttachmentService>();
+
 
             builder.Services.AddDbContext<GymDbContext>(options =>
                 options.UseSqlServer(

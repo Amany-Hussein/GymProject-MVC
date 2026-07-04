@@ -9,10 +9,12 @@ namespace GymProject.PL.Controllers
 
 
         private readonly IMemberService memberService;
+        private readonly IAttachmentService attachmentService;
 
-        public MemberController(IMemberService memberService)
+        public MemberController(IMemberService memberService ,IAttachmentService attachmentService)
         {
             this.memberService = memberService;
+            this.attachmentService = attachmentService;
         }
 
         #region Get
@@ -51,6 +53,24 @@ namespace GymProject.PL.Controllers
             else
 
                 return View(record);
+        }
+
+
+        // Action to Get MemberPhoto
+        [HttpGet]
+        public async Task<IActionResult> Picture(int id)
+        {
+            var member = await memberService.GetMemberDetailsByIdAsync(id);
+
+            if (member is null || string.IsNullOrWhiteSpace(member.Photo))
+                return NotFound();
+
+            var result = attachmentService.GetFile(member.Photo, "MembersPhoto");
+
+            if(result is null)
+                return NotFound();
+
+            return File(result.Value.stream, result.Value.ContantType);
         }
 
         #endregion
