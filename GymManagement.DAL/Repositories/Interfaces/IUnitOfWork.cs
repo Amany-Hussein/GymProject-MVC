@@ -15,6 +15,9 @@ namespace GymManagement.DAL.Repositories.Interfaces
 
         //Session Repo
         public ISessionRepository SessionRepository { get; }
+        public IMemberShipRepository MembershipRepository { get; }
+
+
     }
 }
 

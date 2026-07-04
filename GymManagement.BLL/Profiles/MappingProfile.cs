@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GymManagement.BLL.ViewModels.MembershipViewModels;
 using GymManagement.BLL.ViewModels.MemberViewModels;
 using GymManagement.BLL.ViewModels.PlanViewModels;
 using GymManagement.BLL.ViewModels.SessionViewModels;
@@ -19,6 +20,8 @@ namespace GymManagement.BLL.Profiles
             MemberProfiels();
             PlanProfiels();
             TrainerProfiels();
+            MembershipProfiels();
+
 
         }
 
@@ -109,6 +112,20 @@ namespace GymManagement.BLL.Profiles
                                                 .ForPath(dest => dest.Address.Street, opt => opt.MapFrom(src => src.Street)); ;
 
         }
+
+        private void MembershipProfiels()
+        {
+            CreateMap<Membership, MembershipViewModel>()
+                                                       .ForMember(dest => dest.MemberName, opt => opt.MapFrom(src => src.Member.Name))
+                                                       .ForMember(dest => dest.PlanName, opt => opt.MapFrom(src => src.Plan.Name))
+                                                       .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.CreatedAt));
+
+            CreateMap<CreateMembershipViewModel, Membership>();
+            CreateMap<Plan, PlanSelectListViewModel>();
+            CreateMap<Member, MemberSelectListViewModel>();
+            ;
+        }
+
 
     }
 }
