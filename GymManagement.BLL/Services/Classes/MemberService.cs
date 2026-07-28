@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using GymManagement.BLL.Common;
 using GymManagement.BLL.Services.Interfaces;
 using GymManagement.BLL.ViewModels.MemberViewModels;
 using GymManagement.DAL.Models;
+using GymManagement.DAL.Repositories.Classes;
 using GymManagement.DAL.Repositories.Interfaces;
 using GymProject.Models;
 using System;
@@ -228,32 +230,18 @@ namespace GymManagement.BLL.Services.Classes
 
         public async Task<bool> UpdateMemberAsync(int id, MemberToUpdateViewModel model, CancellationToken ct = default)
         {
-            //Get Member
+            //get mmeber
             var member = await unitOfWork.GetRepository<Member>().GetByIdAsync(id, ct);
-
-            //Check if any other has the same Email or Phone
-            var EmailExists = await unitOfWork.GetRepository<Member>().AnyAsync(x => x.Email == model.Email && x.Id != id);
-            var PhoneExists = await unitOfWork.GetRepository<Member>().AnyAsync(x => x.Phone == model.Email && x.Id != id);
-
-            if(EmailExists || PhoneExists)
-            {
-                return false;
-            }
-
-            // Map from MemberToUpdateViewModel => Member
-            mapper.Map<Member>(member);
-
-            //member.Phone = model.Phone;
-            //member.Email = model.Email;
-            //member.Address.City = model.City;
-            //member.Address.Street = model.Street;
-            //member.Address.BuildingNumber = model.BuildingNumber;
+            //check the if any onther member has phone or email
+            var emailexist = await unitOfWork.GetRepository<Member>().AnyAsync(X => X.Email == model.Email && X.Id != id); //not the current member cause may the same one save the same email while editing
+            var phoneexist = await unitOfWork.GetRepository<Member>().AnyAsync(X => X.Phone == model.Phone && X.Id != id);
+            if (emailexist || phoneexist) return false;
+            //membertoupdateviewmodel to member
+            //  _mapper.Map<Member>(member); wrong => create new object the address is null here
+            mapper.Map<MemberToUpdateViewModel, Member>(model, member);
             member.UpdatedAt = DateTime.Now;
-
             unitOfWork.GetRepository<Member>().UpdateAsync(member);
-
             var result = await unitOfWork.SaveChangesAsync(ct);
-
             return result > 0;
         }
     }

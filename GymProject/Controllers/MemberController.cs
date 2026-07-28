@@ -131,7 +131,7 @@ namespace GymProject.PL.Controllers
             //Check ModelState
             if (!ModelState.IsValid)
             {
-                return View(model);
+                View(nameof(EditMember), model);
             }
 
             var result = await memberService.UpdateMemberAsync(id, model, ct);
@@ -139,7 +139,7 @@ namespace GymProject.PL.Controllers
             if (result)
                 TempData["SuccessMessage"] = "Member Updated Succefully";
             else
-                TempData["ErrorMessage"] = "Failed to Update Member 1";
+                TempData["ErrorMessage"] = "Failed to Update Member !";
 
             return RedirectToAction(nameof(Index));
         }
